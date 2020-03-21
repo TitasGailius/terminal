@@ -250,7 +250,7 @@ Terminal::removeVendors();
 Terminal has some special features to help you easily and expressively write tests.
 Terminal's fake method allows you to instruct the Terminal to return stubbed / dummy response when commands are executed.
 
-#### Faking Responses
+### Faking Responses
 
 To instruct the Terminal to return empty responses for every executed command, you may call the `fake` method with no arguments:
 
@@ -260,7 +260,7 @@ Terminal::fake();
 $resposne = Terminal::run(...);
 ```
 
-#### Faking Specific Commands
+### Faking Specific Commands
 
 Alternatively, you may pass an array to the fake method.
 The array's keys should represent the commands that you wish to fake and their associated responses.
@@ -281,7 +281,7 @@ Terminal::fake([
 ]);
 ```
 
-#### Response Lines
+### Response Lines
 
 Besides passing a string or an array of lines, you may explicitly specify the type of each line.
 Terminal has `line` and `error` methods that help you create more accurate responses.
@@ -295,7 +295,7 @@ Terminal::fake([
 ]);
 ```
 
-#### Failed Response
+### Failed Response
 
 It is very simple to stub a failed response.
 Move your response line(s) to the Terminal's `response` method and call `shouldFail` on top of that.
@@ -309,7 +309,7 @@ Terminal::fake([
 ]);
 ```
 
-#### Inspecting Commands
+### Inspecting Commands
 
 When faking responses, you may occasionally wish to inspect the commands the Terminal receives in order to make sure your application is executing the correct commmands.
 
@@ -323,7 +323,7 @@ Terminal::run('php artisan migrate');
 Terminal::assertExecuted('php artisan migrate');
 ```
 
-#### Mocking Symfony Process
+### Mocking Symfony Process
 
 If you need to mock the underlying Symfony's Process, you may use the Terminal's `response` method.
 
