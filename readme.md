@@ -29,6 +29,7 @@ An Elegant wrapper around Symfony's Process component.
     - [Failed Response](#failed-response)
     - [Inspecting Commands](#inspecting-commands)
     - [Mocking Symfony Process](#mocking-symfony-process)
+    - [Caveats](#caveats)
 
 <!-- - [Executing Command Asynchronously](#executing-commands-asynchronously) -->
 
@@ -352,4 +353,24 @@ Terminal::fake([
 
 $this->assertEquals(123, Terminal::run('factor 12')->getPid());
 $this->assertEquals(321, Terminal::run('php artisan migrate')->getPid());
+```
+
+### Caveats
+
+Terminal is using some static methods to provide these beatiful testing features.
+Specifically, Terminal stores the fake responses on a static property, which means they do not get cleared between each test.
+
+To prevent this you may use the `Terminal::reset` method.
+The best place to call it is from the PhpUnit's `teardown` method.
+
+```php
+/**
+ * This method is called after each test.
+ */
+protected function tearDown(): void
+{
+    parent::tearDown();
+
+    Terminal::reset();
+}
 ```
