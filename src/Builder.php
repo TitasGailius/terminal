@@ -2,6 +2,9 @@
 
 namespace TitasGailius\Terminal;
 
+use DateTime;
+use DateInterval;
+use BadMethodCallException;
 use Symfony\Component\Process\Process;
 
 class Builder
@@ -11,7 +14,7 @@ class Builder
      *
      * @var string|array  $command
      */
-    protected $command;
+    protected $command = [];
 
     /**
      * Timeout.
@@ -39,7 +42,7 @@ class Builder
      *
      * @var mixed|null $input
      */
-    protected $input;
+    protected $output;
 
     /**
      * Determine if a process should execute in the background.
@@ -49,6 +52,32 @@ class Builder
     protected $inBackground = false;
 
     /**
+     * Retry configuration for the command.
+     *
+     * @var array|null
+     */
+    protected $retries = [1, 0];
+
+    /**
+     * Builder extensions.
+     *
+     * @var array
+     */
+    protected static $extensions = [];
+
+    /**
+     * Extend the builder with a custom method.
+     *
+     * @param  string  $method
+     * @param  callable  $callback
+     * @return void
+     */
+    public static function extend(string $method, callable $callback)
+    {
+        static::$extensions[$method] = $callback;
+    }
+
+    /**
      * Command to execute.
      *
      * @param  string|array $command
@@ -56,9 +85,19 @@ class Builder
      */
     public function command($command)
     {
-        $this->command = $commnad;
+        $this->command = $command;
 
         return $this;
+    }
+
+    /**
+     * Get the executable command.
+     *
+     * @return string|array $command
+     */
+    public function getCommand()
+    {
+        return $this->command;
     }
 
     /**
@@ -90,25 +129,25 @@ class Builder
     /**
      * Set process environment variables.
      *
-     * @param  array $variables
+     * @param  array $environmentVariables
      * @return $this
      */
-    public function withEnvironmentVariables(array $variables)
+    public function withEnvironmentVariables(array $environmentVariables)
     {
-        $this->environmentVariables = $variables;
+        $this->environmentVariables = $environmentVariables;
 
         return $this;
     }
 
     /**
-     * Set input as stream resource, scalar or \Traversable, or null for no input
+     * Set output handler.
      *
-     * @param  mixed|null  $input
+     * @param  callable  $output
      * @return $this
      */
-    public function withInput($input)
+    public function output(callable $output)
     {
-        $this->input = $input;
+        $this->output = $output;
 
         return $this;
     }
@@ -126,29 +165,69 @@ class Builder
     }
 
     /**
+     * Retry an operation a given number of times.
+     *
+     * @param  int  $times
+     * @param  int  $sleep
+     * @return $this
+     */
+    public function retries(int $times, int $sleep)
+    {
+        $this->retries = [$times, $sleep];
+
+        return $this;
+    }
+
+    /**
      * Execute a given command.
      *
-     * @param  string|array|null $command
-     * @param  callable|null $callback
-     * @return array
+     * @param  mixed $command
+     * @param  callable|null $output
+     * @return \TitasGailius\Terminal\Response
      */
-    public function execute($command = null, callable $callback = null)
+    public function run($command = null, callable $output = null)
     {
-        $result = [];
+        return $this->execute($command, $output);
+    }
 
-        return $this->process($command)->{$this->runMethod()}($callback ?: function ($type, $line) use ($result) {
-            $result[] = $line;
+    /**
+     * Execute a given command.
+     *
+     * @param  mixed $command
+     * @param  callable|null $output
+     * @return \TitasGailius\Terminal\Response
+     */
+    public function execute($command = null, callable $output = null)
+    {
+        if (is_callable($command)) {
+            [$command, $output] = [null, $command];
+        }
+
+        if (! is_null($command)) {
+            $this->command($command);
+        }
+
+        if (! is_null($output)) {
+            $this->output($output);
+        }
+
+        [$times, $sleep] = $this->retries;
+
+        if ($times <= 1) {
+            return $this->runProcess($this->process());
+        }
+
+        return $this->retry($times, $sleep, function () use ($process) {
+            return $this->runProcess($process)->throw();
         });
-
-        return $result;
     }
 
     /**
      * Execute a given comman in the background.
      *
-     * @param  string|array|null $command
+     * @param  mixed $command
      * @param  callable|null $callback
-     * @return array
+     * @return \TitasGailius\Terminal\Response
      */
     public function executeInBackground($command = null, callable $callback = null)
     {
@@ -157,24 +236,65 @@ class Builder
     }
 
     /**
+     * Run a given process.
+     *
+     * @param  \Symfony\Component\Process\Process  $process
+     * @return \TitasGailius\Terminal\Response
+     */
+    protected function runProcess(Process $process)
+    {
+        $process->{$this->inBackground ? 'start' : 'run'}($this->output);
+
+        return new Response($process);
+    }
+
+    /**
+     * Retry an operation a given number of times.
+     *
+     * @param  int  $times
+     * @param  int  $sleep
+     * @param  callable  $callback
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    public function retry($times, $sleep = 0, callable $callback)
+    {
+        $attempts = 0;
+
+        beginning:
+        $attempts++;
+        $times--;
+
+        try {
+            return $callback($attempts);
+        } catch (Exception $e) {
+            if ($times < 1) {
+                throw $e;
+            }
+
+            if ($sleep) {
+                usleep($sleep * 1000);
+            }
+
+            goto beginning;
+        }
+    }
+
+    /**
      * Make a new process instance.
      *
-     * @param  string|array|null $command
      * @return \Symfony\Component\Process\Process
      */
-    public function process($command)
+    public function process()
     {
         $parameters = [
-            $command,
+            $command = $this->command,
             $this->cwd,
             $this->environmentVariables,
             $this->input,
-            $this->getSeconds
+            $this->getSeconds($this->timeout)
         ];
-
-        if (is_null($command)) {
-            $command = $this->command;
-        }
 
         return is_string($command)
             ? Process::fromShellCommandline(...$parameters)
@@ -182,12 +302,43 @@ class Builder
     }
 
     /**
-     * Return a method used to run a script.
+     * Get timeout seconds.
      *
-     * @return string
+     * @param int|\DateTime $timeout
+     * @return int
      */
-    public function runMethod()
+    protected function getSeconds($timeout)
     {
-        return $this->inBackground ? 'start' : 'run';
+        if ($timeout instanceof DateInterval) {
+            $timeout = (new DateTime)->add($timeout);
+        }
+
+        if ($timeout instanceof DateTime) {
+            return $timeout->getTimestamp() - (new DateTime)->getTimestamp();
+        }
+
+        return $timeout;
+    }
+
+    /**
+     * Dynamically forward calls to the process instance.
+     *
+     * @param  string $method
+     * @param  array $parameters
+     * @return mixed
+     */
+    public function __call(string $method, array $parameters)
+    {
+        if (isset(static::$extensions[$method])) {
+            return static::$extensions[$method]($this);
+        }
+
+        if (method_exists($this->process, $method)) {
+            return $this->process()->{$method}(...$parameters);
+        }
+
+        throw new BadMethodCallException(sprintf(
+            'Call to undefined method %s::%s()', static::class, $method
+        ));
     }
 }

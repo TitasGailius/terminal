@@ -2,23 +2,131 @@
 
 namespace TitasGailius\Terminal;
 
-class Terminal
+use Symfony\Component\Process\Process;
+use TitasGailius\Terminal\Contracts\Factory;
+
+class Terminal implements Factory
 {
     /**
-     * Dynamically instantiate a new ProcessBuilder instance.
+     * Indicate whether the terminal are captured.
      *
-     * @param  string $method
-     * @param  array $parameters
-     * @return ProcessBuilder
+     * @var boolean
      */
-    public static function __callStatic(string $method, array $parameters = [])
+    protected static $fake = false;
+
+    /**
+     * Use a fake Terminal.
+     *
+     * @return void
+     */
+    public static function fake(array $commands = [])
     {
-        if (method_exists(Builder::class, $method)) {
-            return (new Builder)->{$method}(...$parameters);
+        static::$fake = true;
+
+        Fakes\BuilderFake::setCommands($commands);
+    }
+
+    /**
+     * Use a real Terminal.
+     *
+     * @return void
+     */
+    public static function reset()
+    {
+        static::$fake = false;
+
+        Fakes\BuilderFake::setCommands([]);
+    }
+
+    /**
+     * Create a fake response.
+     *
+     * @param  mixed $lines
+     * @return \TitasGailius\Terminal\Fakes\ResponseFakeBuilder
+     */
+    public static function response($lines = null, $process = null)
+    {
+        if ($lines instanceof Process) {
+            [$lines, $process] = [$process, $lines];
         }
 
-        throw new BadMethodCallException(sprintf(
-            'Call to undefined method %s::%s()', static::class, $method
-        ));
+        if (is_null($process)) {
+            $process = new Process([]);
+        }
+
+        return new Fakes\ResponseFake($process, static::lines($lines));
+    }
+
+    /**
+     * Parse given lines.
+     *
+     * @param  mixed $lines
+     * @return array
+     */
+    public static function lines($lines, string $type = Process::OUT)
+    {
+        return array_map(function ($line) use ($type) {
+            return static::line($line, $type);
+        }, is_array($lines) ? $lines : [$lines]);
+    }
+
+    /**
+     * Create a new output line.
+     *
+     * @param  mixed  $content
+     * @param  string  $type
+     * @return \TitasGailius\Terminal\OutputLine
+     */
+    public static function line($content = '', string $type = Process::OUT)
+    {
+        if ($content instanceof OutputLine) {
+            return $content;
+        }
+
+        if (is_array($content)) {
+            return static::lines($content);
+        }
+
+        return new OutputLine(
+            (string) $type,
+            (string) $content
+        );
+    }
+
+    /**
+     * Create a new error line.
+     *
+     * @param  string  $content
+     * @return \TitasGailius\Terminal\OutputLine
+     */
+    public static function error(string $content)
+    {
+        return static::line($content, Process::ERR);
+    }
+
+    /**
+     * Get an instance of the Process builder class.
+     *
+     * @return \TitasGailius\Terminal\Builder|\TitasGailius\Terminal\BuilderFake
+     */
+    public static function builder()
+    {
+        $class = static::$fake
+            ? Fakes\BuilderFake::class
+            : Builder::class;
+
+        return new $class;
+    }
+
+    /**
+     * Dynamically pass method calls to a new Builder instance.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return \TitasGailius\Terminal\Builder|\TitasGailius\Terminal\BuilderFake
+     */
+    public static function __callStatic(string $method, array $parameters)
+    {
+        return call_user_func([static::builder(), $method], ...$parameters);
     }
 }
