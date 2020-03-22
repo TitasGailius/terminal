@@ -328,7 +328,7 @@ Terminal::assertExecuted('php artisan migrate');
 
 If you need to mock the underlying Symfony's Process, you may use the Terminal's `response` method.
 
-Terminal's `response` method may be used in a several ways:
+Terminal's `response` method may be used in several ways:
 
 1. Passing response line(s) and an optional process instance.
 2. Passing only the process instance.
@@ -357,7 +357,7 @@ $this->assertEquals(321, Terminal::run('php artisan migrate')->getPid());
 
 ### Caveats
 
-Terminal is using some static methods to provide these beatiful testing features.
+Terminal is using some static methods to provide these beautiful testing features.
 Specifically, Terminal stores the fake responses on a static property, which means they do not get cleared between each test.
 
 To prevent this you may use the `Terminal::reset` method.
