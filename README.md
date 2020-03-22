@@ -8,6 +8,7 @@ An Elegant wrapper around Symfony's Process component.
 
 # Content
 
+- [Installation](#installation)
 - [Executing Commands](#executing-commands)
 - [Response](#response)
     - [Overview](#response)
