@@ -27,6 +27,7 @@ class ResponseFake extends Response
      *
      * @param  \Symfony\Component\Process\Process  $process
      * @param  array  $lines
+     * @param  int  $exitCode
      */
     public function __construct(Process $process, array $lines = [], int $exitCode = 0)
     {
