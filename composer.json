@@ -1,6 +1,25 @@
 {
+    "name": "titasgailius/terminal",
+    "description": "Terminal is an Elegent wrapper around Symfony's Process component.",
+    "keywords": ["laravel", "symfony", "process", "terminal", "bash", "exec"],
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/TitasGailius/terminal/issues",
+        "source": "https://github.com/TitasGailius/terminal"
+    },
+    "authors": [
+        {
+            "name": "Titas Gailius",
+            "email": "titas.gailius@gmail.com"
+        }
+    ],
     "require": {
         "symfony/process": "^5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0",
+        "mockery/mockery": "^1.3",
+        "symfony/var-dumper": "^5.0"
     },
     "autoload": {
         "psr-4": {
@@ -12,9 +31,9 @@
             "TitasGailius\\Terminal\\Tests\\": "tests/"
         }
     },
-    "require-dev": {
-        "phpunit/phpunit": "^9.0",
-        "mockery/mockery": "^1.3",
-        "symfony/var-dumper": "^5.0"
-    }
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
