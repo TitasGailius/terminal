@@ -357,7 +357,7 @@ class Builder
      * @param  mixed  $command
      * @return string
      */
-    protected function prepareCommand(string $command)
+    protected function prepareCommand($command)
     {
         if (! is_string($command)) {
             return $command;
