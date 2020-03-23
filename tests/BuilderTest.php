@@ -200,7 +200,7 @@ class BuilderTest extends TestCase
      *
      * @return void
      */
-    public function testWith()
+    public function testData()
     {
         $process = (new Builder)->with([
             'foo' => 'World',
@@ -212,6 +212,18 @@ class BuilderTest extends TestCase
         $process->run();
 
         $this->assertEquals("Hello, World\n", $process->getOutput());
+    }
+
+    public function testDataWithMissingBinding()
+    {
+        $process = (new Builder)->command('echo Hello, {{ $foo }}')->process();
+
+        $this->assertEquals('echo Hello, "${:terminal_foo}"', $process->getCommandLine());
+        $this->assertEquals(['terminal_foo' => ''], $process->getEnv());
+
+        $process->run();
+
+        $this->assertEquals("Hello, \n", $process->getOutput());
     }
 
     /**

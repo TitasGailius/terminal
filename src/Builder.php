@@ -359,7 +359,7 @@ class Builder
      */
     protected function prepareCommand(string $command)
     {
-        if (! is_string($command) || empty($this->with)) {
+        if (! is_string($command)) {
             return $command;
         }
 
