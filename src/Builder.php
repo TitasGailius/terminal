@@ -5,6 +5,7 @@ namespace TitasGailius\Terminal;
 use DateTime;
 use DateInterval;
 use BadMethodCallException;
+use InvalidArgumentException;
 use Symfony\Component\Process\Process;
 
 class Builder
@@ -57,6 +58,13 @@ class Builder
      * @var array|null
      */
     protected $retries = [1, 0];
+
+    /**
+     * Command data bindings.
+     *
+     * @var array
+     */
+    protected $with = [];
 
     /**
      * Builder extensions.
@@ -179,6 +187,48 @@ class Builder
     }
 
     /**
+     * Bind command data.
+     *
+     * @param  mied  $key
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function with($key, $value = null)
+    {
+        if (is_array($key)) {
+            return $this->setWith($key);
+        }
+
+        return $this->mergeWith([$key => $value]);
+    }
+
+    /**
+     * Set command data bindings.
+     *
+     * @param array  $with
+     * @return $this
+     */
+    public function setWith(array $with)
+    {
+        $this->with = $with;
+
+        return $this;
+    }
+
+    /**
+     * Merge command bindings.
+     *
+     * @param  array  $with
+     * @return $this
+     */
+    public function mergeWith(array $with)
+    {
+        $this->with = array_merge($this->with, $with);
+
+        return $this;
+    }
+
+    /**
      * Execute a given command.
      *
      * @param  mixed $command
@@ -289,7 +339,7 @@ class Builder
     public function process()
     {
         $parameters = [
-            $command = $this->command,
+            $command = $this->prepareCommand($this->command),
             $this->cwd,
             $this->environmentVariables,
             $this->input,
@@ -299,6 +349,25 @@ class Builder
         return is_string($command)
             ? Process::fromShellCommandline(...$parameters)
             : new Process(...$parameters);
+    }
+
+    /**
+     * Prepare a given command.
+     *
+     * @param  mixed  $command
+     * @return string
+     */
+    protected function prepareCommand(string $command)
+    {
+        if (! is_string($command) || empty($this->with)) {
+            return $command;
+        }
+
+        return preg_replace_callback('/\{\{\s?\$(\w+)\s?\}\}/u', function ($matches) use ($command) {
+            $this->environmentVariables[$key = 'terminal_'.$matches[1]] = $this->with[$matches[1]] ?? '';
+
+            return sprintf('"${:%s}"', $key);
+        }, $command);
     }
 
     /**

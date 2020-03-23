@@ -196,6 +196,25 @@ class BuilderTest extends TestCase
     }
 
     /**
+     * Test that the "with" command prepares the command correctly.
+     *
+     * @return void
+     */
+    public function testWith()
+    {
+        $process = (new Builder)->with([
+            'foo' => 'World',
+        ])->command('echo Hello, {{ $foo }}')->process();
+
+        $this->assertEquals('echo Hello, "${:terminal_foo}"', $process->getCommandLine());
+        $this->assertEquals(['terminal_foo' => 'World'], $process->getEnv());
+
+        $process->run();
+
+        $this->assertEquals("Hello, World\n", $process->getOutput());
+    }
+
+    /**
      * Create a new builder instance with a mocked process instance.
      *
      * @param  callable $mocker
