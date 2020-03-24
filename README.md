@@ -16,6 +16,7 @@ An Elegant wrapper around Symfony's Process component.
     - [Output Stream (Recommended)](#output-stream)
     - [Output Lines](#output-lines)
     - [Throwing Exceptions](#throwing-exceptions)
+- [Data](#data)
 - [Working Directory](#working-directory)
 - [Timeout](#timeout)
 - [Retries](#retries)
@@ -134,6 +135,26 @@ Terminal::wait();
 
 If you want to know why it's better to wait for the command to complete, you may read these [Symfony notes](https://symfony.com/doc/current/components/process.html#running-processes-asynchronously).
  -->
+# Data
+
+If you need to pass any data to your command line, it's better to bind it using the `with` method.
+Terminal can escape and prepare the values for you. Reference these values using the `{{ $key }}` syntax.
+
+```php
+Terminal::with([
+    'firstname' => 'John',
+    'lastname' => 'Doe',
+])->run('echo Hello, {{ $firstname}} {{ $lastname }}');
+```
+
+Alternatively, you may pass the key-value pairs in separate parameters.
+
+```php
+Terminal::with('firstname', 'John')
+        ->with('lastname', 'Doe')
+        ->run('echo Hello, {{ $firstname}} {{ $lastname }}');
+```
+
 # Working Directory
 
 If you would like to change the current working directory from which
