@@ -147,12 +147,11 @@ Terminal::with([
 ])->run('echo Hello, {{ $firstname}} {{ $lastname }}');
 ```
 
-Alternatively, you may pass the key-value pairs in separate parameters.
+Alternatively, you may pass the key-value pair in separate parameters.
 
 ```php
-Terminal::with('firstname', 'John')
-        ->with('lastname', 'Doe')
-        ->run('echo Hello, {{ $firstname}} {{ $lastname }}');
+Terminal::with('greeting', 'World')
+        ->run('echo Hello, {{ $greeting }}');
 ```
 
 # Working Directory
