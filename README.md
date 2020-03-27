@@ -101,7 +101,7 @@ And you may use this object as a string to get the contents of the line:
 Alternatively, you may use the `content` method to get the contents of the line:
 
 ```php
-$$line->content();
+$line->content();
 ```
 
 ### Throwing Exceptions
