@@ -314,7 +314,7 @@ class Builder
             $command = $this->prepareCommand($this->command),
             $this->cwd,
             $this->environmentVariables,
-            $this->input,
+            $this->output,
             $this->getSeconds($this->timeout)
         ];
 
