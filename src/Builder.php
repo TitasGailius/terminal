@@ -39,11 +39,18 @@ class Builder
     protected $environmentVariables;
 
     /**
-     * The input as stream resource, scalar or \Traversable, or null for no input
+     * The callback that is run whenever there is some output available.
+     *
+     * @var callable $output
+     */
+    protected $output;
+
+    /**
+     * The input as stream resource, scalar or \Traversable, or null for no input.
      *
      * @var mixed|null $input
      */
-    protected $output;
+    protected $input;
 
     /**
      * Determine if a process should execute in the background.
@@ -156,6 +163,19 @@ class Builder
     public function output(callable $output)
     {
         $this->output = $output;
+
+        return $this;
+    }
+
+    /**
+     * Set input.
+     *
+     * @param  mixed  $input
+     * @return $this
+     */
+    public function input($input)
+    {
+        $this->input = $input;
 
         return $this;
     }
@@ -314,7 +334,7 @@ class Builder
             $command = $this->prepareCommand($this->command),
             $this->cwd,
             $this->environmentVariables,
-            $this->output,
+            $this->input,
             $this->getSeconds($this->timeout)
         ];
 
