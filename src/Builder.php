@@ -394,7 +394,7 @@ class Builder
             return static::$extensions[$method]($this);
         }
 
-        if (method_exists($this->process, $method)) {
+        if (method_exists($this->process(), $method)) {
             return $this->process()->{$method}(...$parameters);
         }
 
