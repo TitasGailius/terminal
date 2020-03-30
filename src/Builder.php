@@ -5,6 +5,7 @@ namespace TitasGailius\Terminal;
 use DateTime;
 use DateInterval;
 use BadMethodCallException;
+use Exception;
 use InvalidArgumentException;
 use Symfony\Component\Process\Process;
 
@@ -259,8 +260,8 @@ class Builder
             return $this->runProcess($this->process());
         }
 
-        return $this->retry($times, $sleep, function () use ($process) {
-            return $this->runProcess($process)->throw();
+        return $this->retry($times, $sleep, function ($attempts) {
+            return $this->runProcess($this->process())->throw();
         });
     }
 
