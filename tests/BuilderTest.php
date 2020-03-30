@@ -243,6 +243,23 @@ class BuilderTest extends TestCase
     }
 
     /**
+     * Test that it retries a failed command.
+     *
+     * @return void
+     */
+    public function testRetry()
+    {
+        $builder = $this->builderWithMockedProccess(function ($mock) {
+            $mock->shouldReceive('isSuccessful')
+                ->times(3)
+                ->andReturn(false, false , true);
+        });
+
+        $builder->retries(3)
+            ->execute('echo Hello, World');
+    }
+
+    /**
      * Create a new builder instance with a mocked process instance.
      *
      * @param  callable $mocker

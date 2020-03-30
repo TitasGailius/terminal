@@ -3,9 +3,9 @@
 namespace TitasGailius\Terminal;
 
 use DateTime;
+use Exception;
 use DateInterval;
 use BadMethodCallException;
-use Exception;
 use InvalidArgumentException;
 use Symfony\Component\Process\Process;
 
@@ -200,7 +200,7 @@ class Builder
      * @param  int  $sleep
      * @return $this
      */
-    public function retries(int $times, int $sleep)
+    public function retries(int $times, int $sleep = 0)
     {
         $this->retries = [$times, $sleep];
 
