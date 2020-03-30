@@ -394,8 +394,8 @@ class Builder
             return static::$extensions[$method]($this);
         }
 
-        if (method_exists($this->process(), $method)) {
-            return $this->process()->{$method}(...$parameters);
+        if (method_exists($process = $this->process(), $method)) {
+            return $process->{$method}(...$parameters);
         }
 
         throw new BadMethodCallException(sprintf(

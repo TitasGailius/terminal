@@ -227,6 +227,22 @@ class BuilderTest extends TestCase
     }
 
     /**
+     * Test that missing methods are passed to the Proccess instance.
+     *
+     * @return void
+     */
+    public function testBuilderProxy()
+    {
+        $builder = $this->builderWithMockedProccess(function ($mock) {
+            $mock->shouldReceive('getPid')
+                ->once()
+                ->andReturn(123);
+        });
+
+        $this->assertEquals(123, $builder->getPid());
+    }
+
+    /**
      * Create a new builder instance with a mocked process instance.
      *
      * @param  callable $mocker
