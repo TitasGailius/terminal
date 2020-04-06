@@ -91,11 +91,21 @@ class BuilderFake extends Builder
     {
         Terminal::capture($this);
 
-        // if (static::shouldRun($process->getCommandLine())) {
-        //     return parent::runProcess($process);
-        // }
+        return static::$commands[$this->getCommandLine()] ?? Terminal::response();
+    }
 
-        return static::$commands[$this->command] ?? Terminal::response();
+    /**
+     * Get the executable command.
+     *
+     * @return string|array $command
+     */
+    protected function getCommandLine()
+    {
+        if (is_array($this->command)) {
+            return implode(' ', $this->command);
+        }
+
+        return $this->command;
     }
 
     /**
@@ -107,7 +117,7 @@ class BuilderFake extends Builder
     public static function assertExecuted($command, int $times = 1)
     {
         $count = count(array_filter(static::$captured, is_callable($command) ?: function ($captured) use ($command) {
-            return $captured->getCommand() == $command;
+            return $captured->getCommandLine() == $command;
         }));
 
         Assert::assertTrue($count === $times, sprintf(
