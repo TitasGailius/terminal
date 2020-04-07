@@ -97,20 +97,6 @@ class BuilderFake extends Builder
     }
 
     /**
-     * Get the executable command.
-     *
-     * @return string|array $command
-     */
-    protected function parseCommand($command)
-    {
-        if (is_array($command)) {
-            return implode(' ', $command);
-        }
-
-        return $command;
-    }
-
-    /**
      * Assert if a given command was executed.
      *
      * @param  mixed  $command
