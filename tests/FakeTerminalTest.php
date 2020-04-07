@@ -116,14 +116,16 @@ class FakeTerminalTest extends TestCase
 
     public function testCaptureArrayCommands()
     {
+        $expected = ['rm', '-rf', 'vendor'];
+
         Terminal::fake([
-            'rm -rf vendor' => 'success',
+            Terminal::toString($expected) => 'success',
         ]);
 
-        $response = Terminal::run(['rm', '-rf', 'vendor']);
+        $response = Terminal::run($expected);
+
+        Terminal::assertExecuted($expected);
 
         $this->assertEquals('success', $response->output());
-
-        Terminal::assertExecuted('rm -rf vendor');
     }
 }

@@ -53,4 +53,22 @@ class TerminalTest extends TestCase
     {
         $this->assertEquals(new Builder, Terminal::builder());
     }
+
+    /**
+     * Test that terminal can convert commands to string.
+     *
+     * @return void
+     */
+    public function testToString()
+    {
+        $this->assertEquals(
+            '\'echo\' \'Hello, World\'',
+            Terminal::toString(['echo', 'Hello, World'])
+        );
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Terminal can only convert array commands to a string.');
+
+        Terminal::toString((object) []);
+    }
 }

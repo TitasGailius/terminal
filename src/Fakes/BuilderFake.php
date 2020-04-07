@@ -91,7 +91,9 @@ class BuilderFake extends Builder
     {
         Terminal::capture($this);
 
-        return static::$commands[$this->getCommandLine()] ?? Terminal::response();
+        $command = Terminal::toString($this->command);
+
+        return static::$commands[$command] ?? Terminal::response();
     }
 
     /**
@@ -99,13 +101,13 @@ class BuilderFake extends Builder
      *
      * @return string|array $command
      */
-    protected function getCommandLine()
+    protected function parseCommand($command)
     {
-        if (is_array($this->command)) {
-            return implode(' ', $this->command);
+        if (is_array($command)) {
+            return implode(' ', $command);
         }
 
-        return $this->command;
+        return $command;
     }
 
     /**
@@ -116,8 +118,10 @@ class BuilderFake extends Builder
      */
     public static function assertExecuted($command, int $times = 1)
     {
+        $command = Terminal::toString($command);
+
         $count = count(array_filter(static::$captured, is_callable($command) ?: function ($captured) use ($command) {
-            return $captured->getCommandLine() == $command;
+            return Terminal::toString($captured->command) == $command;
         }));
 
         Assert::assertTrue($count === $times, sprintf(

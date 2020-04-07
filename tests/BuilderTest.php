@@ -131,6 +131,18 @@ class BuilderTest extends TestCase
     }
 
     /**
+     * Test that the terminal can execute array commands.
+     *
+     * @return void
+     */
+    public function testExecuteArrayCommands()
+    {
+        $response = (new Builder)->run(['echo', 'Hello, World']);
+
+        $this->assertEquals("Hello, World\n", (string) $response);
+    }
+
+    /**
      * Test that "execute" method starts the process.
      *
      * @return void
