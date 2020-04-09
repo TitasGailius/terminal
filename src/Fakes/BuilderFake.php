@@ -106,9 +106,11 @@ class BuilderFake extends Builder
     {
         $command = Terminal::toString($command);
 
-        $count = count(array_filter(static::$captured, is_callable($command) ?: function ($captured) use ($command) {
-            return Terminal::toString($captured->command) == $command;
-        }));
+        $filter = is_callable($command) ? $command : function ($captured) use ($command) {
+            return $captured->toString() == $command;
+        };
+
+        $count = count(array_filter(static::$captured, $filter));
 
         Assert::assertTrue($count === $times, sprintf(
             'The expected command [%s] was executed %s times instead of %s times.',
