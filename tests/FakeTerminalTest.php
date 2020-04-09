@@ -40,6 +40,22 @@ class FakeTerminalTest extends TestCase
         Terminal::assertExecuted($expected);
     }
 
+    /**
+     * Test that Terminal can capture and assert executions using a custom filter.
+     *
+     * @return void
+     */
+    public function testCaptureAndAssertExecutedUsingCustomFilter()
+    {
+        Terminal::fake();
+
+        Terminal::execute($expected = 'echo "Hello, World"');
+
+        Terminal::assertExecuted(function ($captured) use ($expected) {
+            return $captured->toString() == $expected;
+        });
+    }
+
     public function testResponseLinesAsStrings()
     {
         Terminal::fake([

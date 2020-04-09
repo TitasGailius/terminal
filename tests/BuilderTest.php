@@ -287,6 +287,11 @@ class BuilderTest extends TestCase
             '\'echo\' \'Hello, World\'',
             (new Builder)->command(['echo', 'Hello, World'])->toString()
         );
+
+        $this->assertEquals(
+            'echo "Hello, World"',
+            (new Builder)->toString('echo "Hello, World"')
+        );
     }
 
     /**
