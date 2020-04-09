@@ -36,6 +36,17 @@ class BuilderFake extends Builder
     }
 
     /**
+     * Set captured commands.
+     *
+     * @param  array  $captured
+     * @return void
+     */
+    public static function setCaptured(array $captured)
+    {
+        static::$captured = $captured;
+    }
+
+    /**
      * Set fake commands.
      *
      * @param  array  $commands
@@ -91,11 +102,7 @@ class BuilderFake extends Builder
     {
         Terminal::capture($this);
 
-        // if (static::shouldRun($process->getCommandLine())) {
-        //     return parent::runProcess($process);
-        // }
-
-        return static::$commands[$this->command] ?? Terminal::response();
+        return static::$commands[$this->toString()] ?? Terminal::response();
     }
 
     /**
@@ -106,13 +113,14 @@ class BuilderFake extends Builder
      */
     public static function assertExecuted($command, int $times = 1)
     {
-        $count = count(array_filter(static::$captured, is_callable($command) ?: function ($captured) use ($command) {
-            return $captured->getCommand() == $command;
-        }));
+        $filter = is_callable($command) ? $command : function ($captured) use ($command) {
+            return $captured->toString() == Terminal::toString($command);
+        };
+
+        $count = count(array_filter(static::$captured, $filter));
 
         Assert::assertTrue($count === $times, sprintf(
-            'The expected command [%s] was executed %s times instead of %s times.',
-            $command, $count, $times
+            'The command was executed %s times instead of expected %s times.', $count, $times
         ));
     }
 }

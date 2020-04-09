@@ -131,6 +131,18 @@ class BuilderTest extends TestCase
     }
 
     /**
+     * Test that the terminal can execute array commands.
+     *
+     * @return void
+     */
+    public function testExecuteArrayCommands()
+    {
+        $response = (new Builder)->run(['echo', 'Hello, World']);
+
+        $this->assertEquals("Hello, World\n", (string) $response);
+    }
+
+    /**
      * Test that "execute" method starts the process.
      *
      * @return void
@@ -257,6 +269,29 @@ class BuilderTest extends TestCase
 
         $builder->retries(3)
             ->execute('echo Hello, World');
+    }
+
+    /**
+     * Test that terminal can convert commands to string.
+     *
+     * @return void
+     */
+    public function testToString()
+    {
+        $this->assertEquals(
+            '\'echo\' \'Hello, World\'',
+            (new Builder)->toString(['echo', 'Hello, World'])
+        );
+
+        $this->assertEquals(
+            '\'echo\' \'Hello, World\'',
+            (new Builder)->command(['echo', 'Hello, World'])->toString()
+        );
+
+        $this->assertEquals(
+            'echo "Hello, World"',
+            (new Builder)->toString('echo "Hello, World"')
+        );
     }
 
     /**
