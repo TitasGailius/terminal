@@ -36,6 +36,17 @@ class BuilderFake extends Builder
     }
 
     /**
+     * Set captured commands.
+     *
+     * @param  array  $captured
+     * @return void
+     */
+    public static function setCaptured(array $captured)
+    {
+        static::$captured = $captured;
+    }
+
+    /**
      * Set fake commands.
      *
      * @param  array  $commands
@@ -91,9 +102,7 @@ class BuilderFake extends Builder
     {
         Terminal::capture($this);
 
-        $command = Terminal::toString($this->command);
-
-        return static::$commands[$command] ?? Terminal::response();
+        return static::$commands[$this->toString()] ?? Terminal::response();
     }
 
     /**

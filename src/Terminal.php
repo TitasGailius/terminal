@@ -36,6 +36,7 @@ class Terminal implements Factory
         static::$fake = false;
 
         Fakes\BuilderFake::setCommands([]);
+        Fakes\BuilderFake::setCaptured([]);
     }
 
     /**
