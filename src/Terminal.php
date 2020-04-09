@@ -2,7 +2,6 @@
 
 namespace TitasGailius\Terminal;
 
-use InvalidArgumentException;
 use Symfony\Component\Process\Process;
 use TitasGailius\Terminal\Contracts\Factory;
 
@@ -103,28 +102,6 @@ class Terminal implements Factory
     public static function error(string $content)
     {
         return static::line($content, Process::ERR);
-    }
-
-    /**
-     * Convert a given comman to string.
-     *
-     * @param  mixed  $command
-     * @return string
-     */
-    public static function toString($command)
-    {
-        if (is_string($command)) {
-            return $command;
-        }
-
-        if (! is_array($command)) {
-            throw new InvalidArgumentException('Terminal can only convert array commands to a string.');
-        }
-
-        return static::builder()
-                    ->command($command)
-                    ->process()
-                    ->getCommandLine();
     }
 
     /**

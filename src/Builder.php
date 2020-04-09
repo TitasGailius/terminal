@@ -383,6 +383,25 @@ class Builder
     }
 
     /**
+     * Get the current command as string.
+     *
+     * @param  string|array|null  $command
+     * @return string
+     */
+    public function toString($command = null)
+    {
+        if (! is_null($command)) {
+            $this->command($command);
+        }
+
+        if (is_string($this->command)) {
+            return $this->command;
+        }
+
+        return $this->process()->getCommandLine();
+    }
+
+    /**
      * Dynamically forward calls to the process instance.
      *
      * @param  string $method

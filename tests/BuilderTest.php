@@ -272,6 +272,24 @@ class BuilderTest extends TestCase
     }
 
     /**
+     * Test that terminal can convert commands to string.
+     *
+     * @return void
+     */
+    public function testToString()
+    {
+        $this->assertEquals(
+            '\'echo\' \'Hello, World\'',
+            (new Builder)->toString(['echo', 'Hello, World'])
+        );
+
+        $this->assertEquals(
+            '\'echo\' \'Hello, World\'',
+            (new Builder)->command(['echo', 'Hello, World'])->toString()
+        );
+    }
+
+    /**
      * Create a new builder instance with a mocked process instance.
      *
      * @param  callable $mocker
