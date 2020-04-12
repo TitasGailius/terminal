@@ -96,6 +96,8 @@ class BuilderTest extends TestCase
      */
     public function testExecuteShouldNotOverrideCommandWithNull()
     {
+        $process = (new Builder)->command([])->process();
+
         $builder = Mockery::mock(Builder::class, function ($mock) use ($process) {
             $mock->shouldAllowMockingProtectedMethods()
                 ->makePartial()
