@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "edc9bcb53e7de4e2fa65bf6941f74e21",
+    "content-hash": "8699a20b9db9b2019df5fac2e8c4ec5d",
     "packages": [
         {
             "name": "symfony/process",
