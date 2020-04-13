@@ -96,18 +96,13 @@ class BuilderTest extends TestCase
      */
     public function testExecuteShouldNotOverrideCommandWithNull()
     {
-        $builder = Mockery::mock(Builder::class, function ($mock) use ($process) {
-            $mock->shouldAllowMockingProtectedMethods()
-                ->makePartial()
-                ->shouldReceive('runProcess')
-                ->andReturn($process);
-        });
+        $builder = new Builder;
 
-        $builder->command('rm -rf vendor');
-        $this->assertEquals('rm -rf vendor', $builder->process()->getCommandLine());
+        $builder->command('echo Hello, World');
+        $this->assertEquals('echo Hello, World', $builder->process()->getCommandLine());
 
         $builder->execute();
-        $this->assertEquals('rm -rf vendor', $builder->process()->getCommandLine());
+        $this->assertEquals('echo Hello, World', $builder->process()->getCommandLine());
     }
 
     /**
