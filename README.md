@@ -1,4 +1,4 @@
-# Terminal ![Status](https://img.shields.io/pypi/status/ansicolortags.svg)
+# Terminal
 
 An Elegant wrapper around Symfony's Process component.
 
