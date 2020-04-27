@@ -108,8 +108,8 @@ $line->content();
 
 ### Output via Laravel Artisan Command
 
-If you are running Terminal from the Laravel's Artisan command, you may display the output by
-passing an instance of a command to the `output` method:
+If you run Terminal from the Laravel's Artisan command, you may send the output to the console by
+passing an instance of the Command to the `output` method:
 
 ```php
 public function handle()
@@ -120,8 +120,8 @@ public function handle()
 
 ### Output via Symfony Console Command
 
-If you run Terminal from the Symfony's console command, you may display the output by
-passing an instance of an output to the `output` method:
+If you run Terminal from the Symfony's Console command, you may send the output to the console by
+passing an instance of the OutputInterface to the `output` method:
 
 ```php
 protected function execute(InputInterface $input, OutputInterface $output)
