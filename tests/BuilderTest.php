@@ -290,6 +290,65 @@ class BuilderTest extends TestCase
     }
 
     /**
+     * Test that termina can handle Symfony' OutputInterface.
+     *
+     * @return void
+     */
+    public function testOutputAsSymfonyOutputInterface()
+    {
+        $output = Mockery::mock('Symfony\Component\Console\Output\OutputInterface', function ($mock) {
+            $mock->shouldReceive('write')
+                ->once()
+                ->with("Hello\n")
+                ->andReturn(null);
+        });
+
+        (new Builder)->output($output)->run('echo Hello');
+    }
+
+    /**
+     * Test that termina can handle Symfony' OutputInterface.
+     *
+     * @return void
+     */
+    public function testOutputAsLaravelCommad()
+    {
+        $output = Mockery::mock('Illuminate\Console\Command', function ($mock) {
+            $mock->shouldReceive('getOutput->write')
+                ->once()
+                ->with("Hello\n")
+                ->andReturn(null);
+        });
+
+        (new Builder)->output($output)->run('echo Hello');
+    }
+
+    /**
+     * Get invalid outputs.
+     *
+     * @return array
+     */
+    public function invalidOutputs(): array
+    {
+        return [
+            [123],
+            ['string'],
+            [new \stdClass],
+        ];
+    }
+
+    /**
+     * Test Terminal output validation.
+     *
+     * @dataProvider invalidOutputs
+     */
+    public function testOutputValidation($output)
+    {
+        $this->expectException('InvalidArgumentException');
+        (new Builder)->output($value)->run('echo Hello');
+    }
+
+    /**
      * Create a new builder instance with a mocked process instance.
      *
      * @param  callable $mocker

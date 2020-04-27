@@ -15,6 +15,8 @@ An Elegant wrapper around Symfony's Process component.
     - [Output to Array](#output-to-array)
     - [Output Stream (Recommended)](#output-stream)
     - [Output Lines](#output-lines)
+    - [Output via Laravel Artisan Command](#output-via-laravel-artisan-command)
+    - [Output via Symfony Console Command](#output-via-symfony-console-command)
     - [Throwing Exceptions](#throwing-exceptions)
 - [Data](#data)
 - [Working Directory](#working-directory)
@@ -102,6 +104,30 @@ Alternatively, you may use the `content` method to get the contents of the line:
 
 ```php
 $line->content();
+```
+
+### Output via Laravel Artisan Command
+
+If you run Terminal from the Laravel's Artisan command, you may send the output to the console by
+passing an instance of the Command to the `output` method:
+
+```php
+public function handle()
+{
+    Terminal::output($this)->run('echo Hello, World');
+}
+```
+
+### Output via Symfony Console Command
+
+If you run Terminal from the Symfony's Console command, you may send the output to the console by
+passing an instance of the OutputInterface to the `output` method:
+
+```php
+protected function execute(InputInterface $input, OutputInterface $output)
+{
+    Terminal::output($output)->run('echo Hello, World');
+}
 ```
 
 ### Throwing Exceptions

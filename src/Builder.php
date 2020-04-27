@@ -158,14 +158,54 @@ class Builder
     /**
      * Set output handler.
      *
-     * @param  callable  $output
+     * @param  mixed  $output
      * @return $this
      */
-    public function output(callable $output)
+    public function output($output)
     {
-        $this->output = $output;
+        $this->output = $this->parseOutput($output);
 
         return $this;
+    }
+
+    /**
+     * Parse a given output.
+     *
+     * @param  mixed  $output
+     * @return callable
+     */
+    protected function parseOutput($output)
+    {
+        if (is_callable($output)) {
+            return $output;
+        }
+
+        if ($output instanceof \Symfony\Component\Console\Output\OutputInterface) {
+            return $this->wrapOutput([$output, 'write']);
+        }
+
+        if ($output instanceof \Illuminate\Console\Command) {
+            return $this->wrapOutput([$output->getOutput(), 'write']);
+        }
+
+        throw new InvalidArgumentException(sprintf(
+            'Terminal output must be a %s, an instance of "%s" or an instance of "%s" but "%s" was given.',
+            'callable', 'Symfony\Component\Console\Output\OutputInterface', 'Illuminate\Console\Command',
+            ($type = gettype($output)) === 'object' ? get_class($output) : $type
+        ));
+    }
+
+    /**
+     * Wrap output callback.
+     *
+     * @param  callable  $callback
+     * @return callable
+     */
+    protected function wrapOutput(callable $callback): callable
+    {
+        return function ($type, $data) use ($callback) {
+            return call_user_func($callback, $data);
+        };
     }
 
     /**
