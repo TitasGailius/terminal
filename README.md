@@ -15,8 +15,8 @@ An Elegant wrapper around Symfony's Process component.
     - [Output to Array](#output-to-array)
     - [Output Stream (Recommended)](#output-stream)
     - [Output Lines](#output-lines)
-    - [Output from Symfony Console Command](#output-from-symfony-console-command)
-    - [Output from Laravel Artisan Command](#output-from-laravel-artisan-command)
+    - [Output via Laravel Artisan Command](#output-via-laravel-artisan-command)
+    - [Output via Symfony Console Command](#output-via-symfony-console-command)
     - [Throwing Exceptions](#throwing-exceptions)
 - [Data](#data)
 - [Working Directory](#working-directory)
@@ -106,19 +106,7 @@ Alternatively, you may use the `content` method to get the contents of the line:
 $line->content();
 ```
 
-### Output from Symfony Console Command
-
-If you are running Terminal from the Symfony's console command, you may display the output by
-passing an instance of an output to the `output` method:
-
-```php
-protected function execute(InputInterface $input, OutputInterface $output)
-{
-    Terminal::output($output)->run('echo Hello, World');
-}
-```
-
-### Output from Laravel Artisan Command
+### Output via Laravel Artisan Command
 
 If you are running Terminal from the Laravel's Artisan command, you may display the output by
 passing an instance of a command to the `output` method:
@@ -127,6 +115,18 @@ passing an instance of a command to the `output` method:
 public function handle()
 {
     Terminal::output($this)->run('echo Hello, World');
+}
+```
+
+### Output via Symfony Console Command
+
+If you run Terminal from the Symfony's console command, you may display the output by
+passing an instance of an output to the `output` method:
+
+```php
+protected function execute(InputInterface $input, OutputInterface $output)
+{
+    Terminal::output($output)->run('echo Hello, World');
 }
 ```
 
