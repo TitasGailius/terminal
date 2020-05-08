@@ -27,7 +27,7 @@ class Terminal implements Factory
     }
 
     /**
-     * Use a real Terminal.
+     * Reset the fake Terminal.
      *
      * @return void
      */
@@ -78,7 +78,7 @@ class Terminal implements Factory
      * @param  string  $type
      * @return OutputLine|OutputLine[]
      */
-    public static function line($content = '', string $type = Process::OUT)
+    public static function line($content, string $type = Process::OUT)
     {
         if ($content instanceof OutputLine) {
             return $content;

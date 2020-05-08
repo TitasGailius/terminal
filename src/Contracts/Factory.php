@@ -14,13 +14,29 @@ interface Factory
     public static function fake(array $commands = []);
 
     /**
-     * Create a new output line instance (or array of instances)
+     * Reset the fake Terminal.
+     *
+     * @return void
+     */
+    public static function reset();
+
+    /**
+     * Create new output line(s)
      *
      * @param  mixed  $content
      * @param  string  $type
-     * @return \TitasGailius\Terminal\OutputLine|\TitasGailius\Terminal\OutputLine[]
+     * @return OutputLine|OutputLine[]
      */
     public static function line($content, string $type = Process::OUT);
+
+    /**
+     * Parse given lines.
+     *
+     * @param  mixed $lines
+     * @return OutputLine[]
+     */
+    public static function lines($lines, string $type = Process::OUT);
+
     /**
      * Create a new error line.
      *
@@ -28,6 +44,7 @@ interface Factory
      * @return \TitasGailius\Terminal\OutputLine
      */
     public static function error(string $content);
+
     /**
      * Get an instance of the Process builder class.
      *

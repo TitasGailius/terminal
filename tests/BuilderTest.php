@@ -345,7 +345,7 @@ class BuilderTest extends TestCase
     public function testOutputValidation($output)
     {
         $this->expectException('InvalidArgumentException');
-        (new Builder)->output($value)->run('echo Hello');
+        (new Builder)->output($output)->run('echo Hello');
     }
 
     /**
