@@ -14,13 +14,13 @@ interface Factory
     public static function fake(array $commands = []);
 
     /**
-     * Create a new output line instance.
+     * Create a new output line instance (or array of instances)
      *
-     * @param  string  $content
+     * @param  mixed  $content
      * @param  string  $type
-     * @return \TitasGailius\Terminal\OutputLine
+     * @return \TitasGailius\Terminal\OutputLine|\TitasGailius\Terminal\OutputLine[]
      */
-    public static function line(string $content, string $type = Process::OUT);
+    public static function line($content, string $type = Process::OUT);
     /**
      * Create a new error line.
      *
