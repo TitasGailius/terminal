@@ -98,7 +98,7 @@ class BuilderFake extends Builder
      * @param  \Symfony\Component\Process\Process  $process
      * @return \TitasGailius\Terminal\Contracts\Response
      */
-    protected function runProcess(Process $process)
+    public function runProcess(Process $process)
     {
         Terminal::capture($this);
 
