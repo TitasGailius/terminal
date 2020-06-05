@@ -324,7 +324,7 @@ class Builder
      * @param  \Symfony\Component\Process\Process  $process
      * @return \TitasGailius\Terminal\Response
      */
-    protected function runProcess(Process $process)
+    public function runProcess(Process $process)
     {
         $process->{$this->inBackground ? 'start' : 'run'}($this->output);
 
