@@ -349,6 +349,52 @@ class BuilderTest extends TestCase
     }
 
     /**
+     * Test Terminal TTY mode.
+     *
+     * @return void
+     */
+    public function testTtyMode()
+    {
+        $process = (new Builder)->tty(false)->process();
+        $this->assertFalse($process->isTty());
+
+        $process = (new Builder)->tty(true)->process();
+        $this->assertTrue($process->isTty());
+
+        $process = (new Builder)->disableTty()->process();
+        $this->assertFalse($process->isTty());
+
+        $process = (new Builder)->enableTty()->process();
+        $this->assertTrue($process->isTty());
+    }
+
+    /**
+     * Test builder idle timeout.
+     *
+     * @dataProvider twentySeconds
+     */
+    public function testIdleTimeout($twentySeconds)
+    {
+        $process = (new Builder)->idleTimeout($twentySeconds)->process();
+        $this->assertEquals(20, $process->getIdleTimeout());
+    }
+
+    /**
+     * Get invalid outputs.
+     *
+     * @return array
+     */
+    public function twentySeconds(): array
+    {
+        return [
+            [20],
+            [20.0],
+            [new DateInterval('PT20S')],
+            [(new DateTime)->add(new DateInterval('PT20S'))],
+        ];
+    }
+
+    /**
      * Create a new builder instance with a mocked process instance.
      *
      * @param  callable $mocker

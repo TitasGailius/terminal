@@ -75,6 +75,20 @@ class Builder
     protected $with = [];
 
     /**
+     * TTY mode.
+     *
+     * @var boolean|null
+     */
+    protected $tty;
+
+    /**
+     * Max time since last output.
+     *
+     * @var mixed
+     */
+    protected $idleTimeout;
+
+    /**
      * Builder extensions.
      *
      * @var array
@@ -262,6 +276,52 @@ class Builder
     }
 
     /**
+     * Enable or disable the TTY mode.
+     *
+     * @param  bool  $tty
+     * @return $this
+     */
+    public function tty(bool $tty)
+    {
+        $this->tty = $tty;
+
+        return $this;
+    }
+
+    /**
+     * Enable TTY mode.
+     *
+     * @return $this
+     */
+    public function enableTty()
+    {
+        return $this->tty(true);
+    }
+
+    /**
+     * Disable TTY mode.
+     *
+     * @return $this
+     */
+    public function disableTty()
+    {
+        return $this->tty(false);
+    }
+
+    /**
+     * Set max time since last output.
+     *
+     * @param  mixed  $timeout
+     * @return $this
+     */
+    public function idleTimeout($timeout)
+    {
+        $this->idleTimeout = $timeout;
+
+        return $this;
+    }
+
+    /**
      * Execute a given command.
      *
      * @param  mixed $command
@@ -379,9 +439,19 @@ class Builder
             $this->getSeconds($this->timeout)
         ];
 
-        return is_string($command)
+        $process = is_string($command)
             ? Process::fromShellCommandline(...$parameters)
             : new Process(...$parameters);
+
+        if (! is_null($this->tty)) {
+            $process->setTty($this->tty);
+        }
+
+        if (! is_null($this->idleTimeout)) {
+            $process->setIdleTimeout($this->getSeconds($this->idleTimeout));
+        }
+
+        return $process;
     }
 
     /**
