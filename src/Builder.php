@@ -264,7 +264,7 @@ class Builder
     /**
      * Bind command data.
      *
-     * @param  mied  $key
+     * @param  mixed  $key
      * @param  mixed  $value
      * @return $this
      */
