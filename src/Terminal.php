@@ -5,6 +5,9 @@ namespace TitasGailius\Terminal;
 use Symfony\Component\Process\Process;
 use TitasGailius\Terminal\Contracts\Factory;
 
+/** 
+ * @staticMixin
+ */
 class Terminal implements Factory
 {
     /**
