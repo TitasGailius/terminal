@@ -371,6 +371,14 @@ Terminal::run('php artisan migrate');
 Terminal::assertExecuted('php artisan migrate');
 ```
 
+Alternatively you can also check that a given command was not executed. You may accomplish this by calling the `Terminal::assertNotExecuted` method after calling `Terminal::fake`.
+
+```php
+Terminal::fake();
+
+Terminal::assertNotExecuted('php artisan migrate');
+```
+
 ### Mocking Symfony Process
 
 If you need to mock the underlying Symfony's Process, you may use the Terminal's `response` method.
