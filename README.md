@@ -283,7 +283,7 @@ $response->isRunning(); // "isRunning" method is passed to the \Symfony\Componen
 
 # Extending
 
-The `extend` methos allows you to define custom methods.
+The `extend` method allows you to define custom methods.
 
 ```php
 Terminal::extend('removeVendors', function ($terminal) {
