@@ -132,6 +132,6 @@ class BuilderFake extends Builder
      */
     public static function assertNotExecuted($command)
     {
-        self::assertExecuted($command, 0);
+        static::assertExecuted($command, 0);
     }
 }

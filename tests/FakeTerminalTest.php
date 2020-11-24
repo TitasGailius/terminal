@@ -50,19 +50,14 @@ class FakeTerminalTest extends TestCase
     {
         Terminal::fake();
 
-        Terminal::assertNotExecuted($expected = 'echo "Hello, World"');
+        Terminal::assertNotExecuted($command = 'echo "Hello, World"');
 
-        Terminal::execute($expected);
+        Terminal::execute($command);
 
         $this->expectException(ExpectationFailedException::class);
-        Terminal::assertNotExecuted($expected = 'echo "Hello, World"');
+        Terminal::assertNotExecuted($command = 'echo "Hello, World"');
     }
 
-    /**
-     * Test that Terminal can capture and assert executions using a custom filter.
-     *
-     * @return void
-     */
     public function testCaptureAndAssertExecutedUsingCustomFilter()
     {
         Terminal::fake();
@@ -74,26 +69,22 @@ class FakeTerminalTest extends TestCase
         });
     }
 
-    /**
-     * Test that Terminal can assert that a given command was not executed using a custom filter.
-     *
-     * @return void
-     */
     public function testAssertNotExecutedUsingCustomFilter()
     {
         Terminal::fake();
 
-        $expected = 'echo "Hello, World"';
+        $command = 'echo "Hello, World"';
 
-        Terminal::assertNotExecuted(function ($captured) use ($expected) {
-            return $captured->toString() == $expected;
+        Terminal::assertNotExecuted(function ($captured) use ($command) {
+            return $captured->toString() == $command;
         });
 
-        Terminal::execute($expected);
+        Terminal::execute($command);
 
         $this->expectException(ExpectationFailedException::class);
-        Terminal::assertNotExecuted(function ($captured) use ($expected) {
-            return $captured->toString() == $expected;
+
+        Terminal::assertNotExecuted(function ($captured) use ($command) {
+            return $captured->toString() == $command;
         });
     }
 
