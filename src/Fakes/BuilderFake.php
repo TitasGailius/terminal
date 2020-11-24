@@ -123,4 +123,15 @@ class BuilderFake extends Builder
             'The command was executed %s times instead of expected %s times.', $count, $times
         ));
     }
+
+    /**
+     * Assert that a given command was not executed.
+     *
+     * @param  mixed  $command
+     * @return void
+     */
+    public static function assertNotExecuted($command)
+    {
+        self::assertExecuted($command, 0);
+    }
 }

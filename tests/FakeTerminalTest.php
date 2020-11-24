@@ -5,6 +5,7 @@ namespace TitasGailius\Terminal\Tests;
 use Mockery;
 use DateTime;
 use DateInterval;
+use PHPUnit\Framework\ExpectationFailedException;
 use TitasGailius\Terminal\Builder;
 use TitasGailius\Terminal\Terminal;
 use Symfony\Component\Process\Process;
@@ -41,6 +42,23 @@ class FakeTerminalTest extends TestCase
     }
 
     /**
+     * Test that Terminal can assert that a given command was not executed.
+     *
+     * @return void
+     */
+    public function testAssertNotExecuted()
+    {
+        Terminal::fake();
+
+        Terminal::assertNotExecuted($expected = 'echo "Hello, World"');
+
+        Terminal::execute($expected);
+
+        $this->expectException(ExpectationFailedException::class);
+        Terminal::assertNotExecuted($expected = 'echo "Hello, World"');
+    }
+
+    /**
      * Test that Terminal can capture and assert executions using a custom filter.
      *
      * @return void
@@ -52,6 +70,29 @@ class FakeTerminalTest extends TestCase
         Terminal::execute($expected = 'echo "Hello, World"');
 
         Terminal::assertExecuted(function ($captured) use ($expected) {
+            return $captured->toString() == $expected;
+        });
+    }
+
+    /**
+     * Test that Terminal can assert that a given command was not executed using a custom filter.
+     *
+     * @return void
+     */
+    public function testAssertNotExecutedUsingCustomFilter()
+    {
+        Terminal::fake();
+
+        $expected = 'echo "Hello, World"';
+
+        Terminal::assertNotExecuted(function ($captured) use ($expected) {
+            return $captured->toString() == $expected;
+        });
+
+        Terminal::execute($expected);
+
+        $this->expectException(ExpectationFailedException::class);
+        Terminal::assertNotExecuted(function ($captured) use ($expected) {
             return $captured->toString() == $expected;
         });
     }
