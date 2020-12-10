@@ -394,14 +394,14 @@ class Builder
     /**
      * Retry an operation a given number of times.
      *
-     * @param  int  $times
-     * @param  int  $sleep
-     * @param  callable  $callback
+     * @param  int|null  $times
+     * @param  int|null  $sleep
+     * @param  callable|null  $callback
      * @return mixed
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function retry($times, $sleep = 0, callable $callback)
+    public function retry(?int $times, ?int $sleep, ?callable $callback): mixed
     {
         $attempts = 0;
 
