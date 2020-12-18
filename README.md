@@ -53,7 +53,7 @@ $response = Terminal::run('rm -rf vendor');
 
 The `run` method returns an instance of `TitasGailius\Terminal\Response`, which provides a variety of methods that may be used to inspect the response:
 ```php
-$response->code() : int;
+$response->getExitCode() : int;
 $response->ok() : bool;
 $response->successful() : bool;
 
