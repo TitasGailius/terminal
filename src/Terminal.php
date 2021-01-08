@@ -5,7 +5,7 @@ namespace TitasGailius\Terminal;
 use Symfony\Component\Process\Process;
 use TitasGailius\Terminal\Contracts\Factory;
 
-/** 
+/**
  * @staticMixin
  */
 class Terminal implements Factory
@@ -115,11 +115,11 @@ class Terminal implements Factory
      */
     public static function builder()
     {
-        $class = static::$fake
-            ? Fakes\BuilderFake::class
-            : Builder::class;
+        if (static::$fake) {
+            return new Fakes\BuilderFake;
+        }
 
-        return new $class;
+        return new Builder;
     }
 
     /**
