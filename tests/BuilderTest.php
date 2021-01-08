@@ -390,7 +390,11 @@ class BuilderTest extends TestCase
             [20],
             [20.0],
             [new DateInterval('PT20S')],
-            [(new DateTime)->add(new DateInterval('PT20S'))],
+
+            // @todo: Think of a better way to test DateTime instance.
+            // The current code causes a race-condition. By the time `getIdelTimeout`
+            // is called a second might have passed resulting in 19 seconds instead of 20.
+            // [(new DateTime)->add(new DateInterval('PT20S'))],
         ];
     }
 
