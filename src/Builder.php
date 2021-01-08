@@ -283,7 +283,9 @@ class Builder
      */
     public function tty(bool $tty)
     {
-        $this->tty = $tty;
+        if (PHP_OS !== 'WINNT' && is_writable('/dev/tty')) {
+            $this->tty = $tty;
+        }
 
         return $this;
     }
