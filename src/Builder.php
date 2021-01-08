@@ -283,9 +283,7 @@ class Builder
      */
     public function tty(bool $tty)
     {
-        if (PHP_OS !== 'WINNT' && is_writable('/dev/tty')) {
-            $this->tty = $tty;
-        }
+        $this->tty = $tty;
 
         return $this;
     }
@@ -446,7 +444,7 @@ class Builder
             : new Process(...$parameters);
 
         if (! is_null($this->tty)) {
-            $process->setTty($this->tty);
+            $process->setTty($this->tty && Process::isTtySupported());
         }
 
         if (! is_null($this->idleTimeout)) {
