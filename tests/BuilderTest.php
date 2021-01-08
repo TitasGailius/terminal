@@ -355,6 +355,10 @@ class BuilderTest extends TestCase
      */
     public function testTtyMode()
     {
+        if (! Process::isTtySupported()) {
+            $this->markTestSkipped('There is no TTY support.');
+        }
+
         $process = (new Builder)->tty(false)->process();
         $this->assertFalse($process->isTty());
 

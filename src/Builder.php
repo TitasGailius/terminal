@@ -444,7 +444,7 @@ class Builder
             : new Process(...$parameters);
 
         if (! is_null($this->tty)) {
-            $process->setTty($this->tty && Process::isTtySupported());
+            $process->setTty($this->tty);
         }
 
         if (! is_null($this->idleTimeout)) {
