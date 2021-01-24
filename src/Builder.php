@@ -360,9 +360,9 @@ class Builder
             return $this->runProcess($this->process());
         }
 
-        return $this->retry($times, $sleep, function ($attempts) {
+        return $this->retry($times, function ($attempts) {
             return $this->runProcess($this->process())->throw();
-        });
+        }, $sleep);
     }
 
     /**
@@ -395,13 +395,13 @@ class Builder
      * Retry an operation a given number of times.
      *
      * @param  int  $times
-     * @param  int  $sleep
      * @param  callable  $callback
+     * @param  int  $sleep
      * @return mixed
      *
      * @throws \Exception
      */
-    public function retry($times, $sleep = 0, callable $callback)
+    protected function retry($times, callable $callback, $sleep = 0)
     {
         $attempts = 0;
 
