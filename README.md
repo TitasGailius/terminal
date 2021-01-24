@@ -34,6 +34,7 @@ An Elegant wrapper around Symfony's Process component.
     - [Inspecting Commands](#inspecting-commands)
     - [Mocking Symfony Process](#mocking-symfony-process)
     - [Caveats](#caveats)
+- [PHP 8 Support](#php-8-support)
 
 <!-- - [Executing Command Asynchronously](#executing-commands-asynchronously) -->
 
@@ -429,3 +430,10 @@ protected function tearDown(): void
     Terminal::reset();
 }
 ```
+
+## PHP 8 Support
+
+To use Terminal with PHP 8.x, please upgrade Terminal to the `^1.0` version.
+
+1. Update your `composer.json` to use the latest version of the terminal: `"titasgailius/terminal": "^1.0"`.
+2. Note that the `Builder::retry` is now a `protected` method. <br> *It's very unlikely that you were was using this method.*.
