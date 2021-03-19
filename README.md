@@ -306,7 +306,7 @@ To instruct the Terminal to return empty responses for every executed command, y
 ```php
 Terminal::fake();
 
-$resposne = Terminal::run(...);
+$response = Terminal::run(...);
 ```
 
 ### Faking Specific Commands
