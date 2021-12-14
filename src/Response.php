@@ -103,6 +103,7 @@ class Response implements ResponseContract
      *
      * @return \Generator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         foreach ($this->process() as $type => $line) {
