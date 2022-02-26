@@ -1,7 +1,7 @@
-# Terminal
-
 I stand with Ukraine | 🇺🇦
 :---: | :---
+
+# Terminal
 
 An Elegant wrapper around Symfony's Process component.
 
