@@ -58,6 +58,9 @@ class ResponseTest extends TestCase
                 ->shouldReceive('getExitCode')
                 ->andReturn(0, 1);
 
+            $mock->shouldReceive('getCommandLine')
+                ->andReturn('echo Hello, World');
+
             $mock->shouldReceive('isOutputDisabled')
                 ->andReturn(true);
         }));

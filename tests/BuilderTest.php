@@ -257,6 +257,9 @@ class BuilderTest extends TestCase
     public function testRetry()
     {
         $builder = $this->builderWithMockedProccess(function ($mock) {
+            $mock->shouldReceive('getCommandLine')
+                ->andReturn('echo Hello, World');
+
             $mock->shouldReceive('isSuccessful')
                 ->times(3)
                 ->andReturn(false, false , true);
