@@ -1,5 +1,8 @@
 # Terminal
 
+I stand with Ukraine | 🇺🇦
+:---: | :---
+
 An Elegant wrapper around Symfony's Process component.
 
 ![Preview](./screenshots/preview.png)
