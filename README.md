@@ -50,6 +50,8 @@ An Elegant wrapper around Symfony's Process component.
 To execute a command, you may use the `run` method. First, let's examine how to execute a basic shell command.
 
 ```php
+use TitasGailius\Terminal\Terminal;
+
 $response = Terminal::run('rm -rf vendor');
 ```
 
