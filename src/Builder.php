@@ -340,7 +340,7 @@ class Builder
      * @param  callable|null $output
      * @return \TitasGailius\Terminal\Response
      */
-    public function execute($command = null, callable $output = null)
+    public function execute($command = null, ?callable $output = null)
     {
         if (is_callable($command)) {
             [$command, $output] = [null, $command];
@@ -372,7 +372,7 @@ class Builder
      * @param  callable|null $callback
      * @return \TitasGailius\Terminal\Response
      */
-    public function executeInBackground($command = null, callable $callback = null)
+    public function executeInBackground($command = null, ?callable $callback = null)
     {
         return $this->inBackground()
                 ->execute($command, $callback);
