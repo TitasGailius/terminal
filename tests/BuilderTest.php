@@ -421,6 +421,7 @@ class BuilderTest extends TestCase
             $mock->makePartial();
             $mock->shouldReceive('run')->andReturn(0);
             $mock->shouldReceive('start')->andReturn(0);
+            $mock->shouldReceive('getWorkingDirectory')->andReturn(null);
         });
 
         $builder = Mockery::mock(Builder::class, function ($mock) use ($process) {

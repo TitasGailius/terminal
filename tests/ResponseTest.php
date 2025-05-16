@@ -63,6 +63,9 @@ class ResponseTest extends TestCase
 
             $mock->shouldReceive('isOutputDisabled')
                 ->andReturn(true);
+
+            $mock->shouldReceive('getWorkingDirectory')
+                ->andReturn(null);
         }));
 
         $this->assertEquals($response, $response->throw());
